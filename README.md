@@ -7,8 +7,10 @@ Data Source: https://www.kaggle.com/datasets/yasserh/walmart-dataset?resource=do
 Specification:
 Postgre Database
 
-Step 1:
-Load CSV data to database.
+Steps:
+Read the CSV to understand data types
+Create table schema for the data
+Load CSV data to the database.
 
 
 
