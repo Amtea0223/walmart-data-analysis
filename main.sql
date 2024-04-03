@@ -6,8 +6,9 @@
 -- update raw_walmart
 -- set "Date" = TO_CHAR(TO_DATE("Date", 'DD-MM-YYYY'), 'YYYY-MM-DD')
 
+select * from raw_walmart
 
---Sales
+--Sales (4 Weeks Rolling Average, Weekly Groth Rate)
 select 
 	"Store",
 	"Date", 
@@ -16,6 +17,26 @@ select
 	ROUND( cast(("Weekly_Sales" - LAG("Weekly_Sales", 1) OVER (Partition by "Store" ORDER BY "Date")) / LAG("Weekly_Sales", 1) OVER (ORDER BY "Date") as numeric),2) AS "Weekly_Growth_Rate"
 from raw_walmart
 order by "Store","Date" asc
+
+--Store Sales Distribution
+DROP TABLE IF EXISTS temp_store_sales;
+create temp table temp_store_sales as 
+select 
+	"Store",
+	ROUND(cast(sum("Weekly_Sales")as numeric),2) as "Store_Sales"
+from raw_walmart
+group by "Store"
+order by "Store";
+
+SELECT
+    "Store",
+    "Store_Sales",
+	round(cast( "Store_Sales" / (SELECT SUM("Store_Sales") FROM temp_store_sales)as numeric),4) AS Sales_Distribution
+FROM
+    temp_store_sales
+
+--Correlation Analysis
+
 
 
 
