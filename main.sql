@@ -29,7 +29,7 @@ order by "Store";
 SELECT
     "Store",
     "Store_Sales",
-	round(cast( "Store_Sales" / (SELECT SUM("Store_Sales") FROM temp_store_sales)as numeric),4) AS Sales_Distribution
+	round(cast( "Store_Sales" / (SELECT SUM("Store_Sales") FROM temp_store_sales)as numeric),4) AS "Sales_Distribution"
 FROM
     temp_store_sales
 
