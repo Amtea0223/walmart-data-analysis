@@ -6,8 +6,6 @@
 -- update raw_walmart
 -- set "Date" = TO_CHAR(TO_DATE("Date", 'DD-MM-YYYY'), 'YYYY-MM-DD')
 
-select * from raw_walmart
-
 --Sales (4 Weeks Rolling Average, Weekly Groth Rate)
 select 
 	"Store",
@@ -43,5 +41,29 @@ select
 	round(cast ( CORR("Weekly_Sales", "Unemployment") as numeric),4) as "Sales_Vs_Unemployment"
 from raw_walmart
 
+--Holiday Sales
+DROP TABLE IF EXISTS temp_sales_holiday;
+create temp table temp_sales_holiday as 
+SELECT
+	"Store",
+    "Holiday_Flag",
+    round(cast( AVG("Weekly_Sales") as numeric),2) AS "Average_Weekly_Sales"
+FROM
+    raw_walmart
+GROUP BY
+	"Store", "Holiday_Flag"
+order by
+	"Store";
+
+select
+	"Store",
+    round(AVG(CASE WHEN "Holiday_Flag" = 1 THEN "Average_Weekly_Sales" END),2) AS "Average_Weekly_Sales_Holiday",
+    round(AVG(CASE WHEN "Holiday_Flag" = 0 THEN "Average_Weekly_Sales" END),2) AS "Average_Weekly_Sales_Non_Holiday",
+	round(AVG(CASE WHEN "Holiday_Flag" = 1 THEN "Average_Weekly_Sales" END) - AVG(CASE WHEN "Holiday_Flag" = 0 THEN "Average_Weekly_Sales" END),2) as holiday_sales_impact
+from temp_sales_holiday
+GROUP BY
+	"Store"
+order by 
+	"Store";
 
 
