@@ -36,7 +36,12 @@ FROM
     temp_store_sales
 
 --Correlation Analysis
-
+select 
+	round(cast ( CORR("Weekly_Sales", "Temperature") as numeric),4) as "Sales_Vs_Temp",
+	round(cast ( CORR("Weekly_Sales", "Fuel_Price") as numeric),4) as "Sales_Vs_Fuel",
+	round(cast ( CORR("Weekly_Sales", "CPI") as numeric),4) as "Sales_Vs_CPI", 
+	round(cast ( CORR("Weekly_Sales", "Unemployment") as numeric),4) as "Sales_Vs_Unemployment"
+from raw_walmart
 
 
 
